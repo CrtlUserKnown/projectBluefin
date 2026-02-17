@@ -1,0 +1,16 @@
+name: backend
+version: 0.1.0
+
+authors:
+  - CtrlUserKnown <Alvarez.christian46@gmail.com>
+
+targets:
+  backend:
+    main: src/backend.cr
+
+dependecies:
+  kemal:
+    github: kemalcr/kemal
+
+crystal: '>= 1.19.1'
+
