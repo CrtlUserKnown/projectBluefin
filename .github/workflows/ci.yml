@@ -1,0 +1,37 @@
+name: Bluefin CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  swift-tests:
+    name: Build and Test Swift
+    runs-on: ubuntu-latest
+    container: swift:6.0-jammy
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache Swift Packages
+        uses: actions/cache@v4
+        with:
+          path: backend/.build
+          key: ${{ runner.os }}-spm-${{ hashFiles('backend/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+      - name: Build
+        run: swift build -v
+      - name: Run tests
+        run: swift test -v
+
+  docker-build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the Docker image
+        run: docker build backend --file backend/Dockerfile --tag project-bluefin-backend:latest
