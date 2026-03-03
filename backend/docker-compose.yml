@@ -1,9 +1,13 @@
-# Docker Compose file for Vapor
+# Docker Compose for Project Bluefin (Hybrid/Development)
 services:
   app:
-    image: backend:latest
-    build:
-      context: .
+    # Use the base Swift image directly so it has the compiler (swift run)
+    image: swift:6.0-noble
+    working_dir: /app
+    volumes:
+      - .:/app
+      # Use a volume for build artifacts to avoid slow syncing and macOS/Linux conflicts
+      - build_cache:/app/.build
     environment:
       DATABASE_HOST: db
       DATABASE_PORT: 5432
@@ -15,7 +19,9 @@ services:
       - '8080:8080'
     depends_on:
       - db
-    command: ["serve", "--env", "development", "--hostname", "0.0.0.0", "--port", "8080"]
+    # Every time the container starts/restarts, it runs 'swift run'
+    # which automatically recompiles if it detects changes.
+    command: ["swift", "run", "backend", "serve", "--hostname", "0.0.0.0", "--port", "8080"]
 
   db:
     image: postgres:16-alpine
@@ -30,3 +36,4 @@ services:
 
 volumes:
   db_data:
+  build_cache:

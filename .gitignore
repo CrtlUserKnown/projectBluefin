@@ -1,0 +1,16 @@
+# Swift
+.build/
+Packages/
+Package.resolved
+*.xcodeproj
+*.xcworkspace
+
+# macOS
+.DS_Store
+
+# Docker
+.dockerignore
+
+# Sandbox
+sandbox/
+!sandbox/.gitkeep
