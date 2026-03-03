@@ -6,6 +6,10 @@ import FluentPostgresDriver
 public func configure(_ app: Application) async throws {
     // uncomment to serve files from /Public folder
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+    app.logger.logLevel = .debug
+
+    app.middleware.use(BluefinErrorMiddleware())
+
     app.migrations.add(CreateUser())
 
     app.databases.use(.postgres(
@@ -18,4 +22,4 @@ public func configure(_ app: Application) async throws {
 
     // register routes
     try routes(app)
-}
+ }
