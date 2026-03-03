@@ -6,14 +6,14 @@ struct ErrorResponse: Content {
 }
 
 struct BluefinErrorMiddleware: AsyncMiddleware {
-    func respond(to request: Request, chainingTo next: AsyncResponder) async throws -> Response {
+    func respond(to request: Request, chainingTo next: any AsyncResponder) async throws -> Response {
         do {
             return try await next.respond(to: request)
         } catch {
             let status: HTTPResponseStatus
             let reason: String
 
-            if let abort = error as? AbortError {
+            if let abort = error as? any AbortError {
                 status = abort.status
                 reason = abort.reason
             } else {
