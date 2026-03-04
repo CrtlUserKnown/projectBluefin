@@ -20,15 +20,13 @@ RUN swift package resolve
 COPY ./Sources ./Sources
 COPY ./Tests ./Tests
 
-# 3. Build the application
+# 3. Build the application and 4. Prepare staging area (combined to share cache)
 RUN --mount=type=cache,target=/build/.build \
     swift build -c release \
         --product backend \
         --static-swift-stdlib \
-        -Xlinker -ljemalloc
-
-# 4. Prepare staging area
-RUN mkdir /staging \
+        -Xlinker -ljemalloc \
+    && mkdir /staging \
     && cp "$(swift build -c release --show-bin-path)/backend" /staging \
     && cp "/usr/libexec/swift/linux/swift-backtrace-static" /staging
 
