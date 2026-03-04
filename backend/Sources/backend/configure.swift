@@ -12,14 +12,17 @@ public func configure(_ app: Application) async throws {
 
     app.migrations.add(CreateUser())
 
-    app.databases.use(.postgres(
+    var postgresConfig = SQLPostgresConfiguration(
         hostname: Environment.get("DATABASE_HOST") ?? "localhost",
         port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? 5432,
         username: Environment.get("DATABASE_USERNAME") ?? "vapor_username",
         password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
-        database: Environment.get("DATABASE_DATABASE") ?? "vapor_database"
-    ), as: .psql)
+        database: Environment.get("DATABASE_DATABASE") ?? "vapor_database",
+        tls: .prefer(try NIOSSLContext(configuration: .makeClientConfiguration()))
+    )
+
+    app.databases.use(.postgres(configuration: postgresConfig), as: .psql)
 
     // register routes
     try routes(app)
- }
+}
