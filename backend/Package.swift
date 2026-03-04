@@ -7,13 +7,9 @@ let package = Package(
        .macOS(.v13)
     ],
     dependencies: [
-        // 💧 A server-side Swift web framework.
         .package(url: "https://github.com/vapor/vapor.git", from: "4.115.0"),
-        // 🔵 Non-blocking, event-driven networking for Swift. Used for custom executors
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.65.0"),
-        // 🗄 Fluent Object-Relational Mapper (ORM).
         .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0"),
-        // 🐘 Fluent driver for Postgres.
         .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.0.0"),
     ],
     targets: [
@@ -34,6 +30,7 @@ let package = Package(
                 .target(name: "backend"),
                 .product(name: "VaporTesting", package: "vapor"),
             ],
+            path: "Tests/backendTests", // Explicitly set the path to avoid overlaps
             swiftSettings: swiftSettings
         )
     ]
